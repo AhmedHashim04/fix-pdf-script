@@ -1,4 +1,3 @@
-
 import io
 import fitz
 from datetime import datetime
@@ -9,25 +8,14 @@ from bidi.algorithm import get_display
 BASE_DIR = Path(__file__).resolve().parent
 
 
-
 def generate_unsigned_alnatour_contract(fields, language='A'):
-    """
-    Existing function from Al Natour project (replicated for test
-    environment).
-    You should:
-    - keep the structure.
-    - only adjust coordinates and filename logic.
-    - NOT change production.
-    """
-
     # Determine template
-    pdf_path = BASE_DIR / "contracts" / ("arabic.pdf" if language =="A" else "english.pdf")
+    pdf_path = BASE_DIR / "contracts" / ("arabic.pdf" if language == "A" else "english.pdf")
     if not pdf_path.exists():
         raise FileNotFoundError(f"PDF template not found: {pdf_path}")
-    
+
     # Open document
     doc = fitz.open(str(pdf_path))
-
 
     # Load Arabic font
     arabic_font_path = BASE_DIR / "contracts" / "font" / "alfont_com_arial-1.ttf"
@@ -36,13 +24,13 @@ def generate_unsigned_alnatour_contract(fields, language='A'):
     if arabic_font_path.exists():
         font_buffer = arabic_font_path.read_bytes()
         font_name = "arabic-font"
+
         for page_num in range(doc.page_count):
             page = doc.load_page(page_num)
-            page.insert_font(fontname=font_name,
-            fontbuffer=font_buffer)
-    # Coordinate configuration (Same as production - initial baseline)
-    if language == 'A':
-            
+            page.insert_font(fontname=font_name, fontbuffer=font_buffer)
+
+    # Coordinates
+    if language == "A":
         field_definitions = {
             "day": {"page": 0, "x": 445, "y": 212},
             "date": {"page": 0, "x": 345, "y": 212},
@@ -59,10 +47,9 @@ def generate_unsigned_alnatour_contract(fields, language='A'):
             "due_date": {"page": 2, "x": 415, "y": 355},
             "address": {"page": 0, "x": 455, "y": 321},
             "client_name_page3": {"page": 2, "x": 428, "y": 480},
-            "client_national_id_page3": {"page": 2, "x": 400, "y":500},
-            "client_location_page3": {"page": 2, "x": 400, "y": 550}
+            "client_national_id_page3": {"page": 2, "x": 400, "y": 500},
+            "client_location_page3": {"page": 2, "x": 400, "y": 550},
         }
-
     else:
         field_definitions = {
             "day": {"page": 0, "x": 149, "y": 207},
@@ -84,42 +71,43 @@ def generate_unsigned_alnatour_contract(fields, language='A'):
             "client_location_page3": {"page": 2, "x": 112, "y": 458},
         }
 
-    font_size = 9 if language == 'A' else 8
+    font_size = 9 if language == "A" else 8
+
+    # ------------- FIXED AREA (LOOP) -------------
     for key, value in fields.items():
         if key not in field_definitions:
             continue
 
         text = str(value)
 
-    # Arabic shaping if needed
+        # Arabic shaping
+        if any(ord(c) > 127 for c in text):
+            try:
+                text = get_display(reshape(text))
+            except:
+                pass
 
-    if any(ord(c) > 127 for c in text):
+        config = field_definitions[key]
+        page = doc.load_page(config["page"])
 
-        try:
-            text = get_display(reshape(text))
-        except:
-            pass
+        if font_name:
+            page.insert_text(
+                (config["x"], config["y"]),
+                text,
+                fontname=font_name,
+                fontsize=font_size,
+                color=(0, 0, 0)
+            )
+        else:
+            page.insert_text(
+                (config["x"], config["y"]),
+                text,
+                fontsize=font_size,
+                color=(0, 0, 0)
+            )
 
-    config = field_definitions[key]
-    page = doc.load_page(config["page"])
-    if font_name:
-        page.insert_text(
-            (config["x"], config["y"]),
-            text,
-            fontname=font_name,
-            fontsize=font_size,
-            color=(0, 0, 0)
-        )
-    else:
-        page.insert_text(
-            (config["x"], config["y"]),
-            text,
-            fontsize=font_size,
-            color=(0, 0, 0)
-        )
-
-    # Save as memory file
+    # Save
     pdf_bytes = doc.write()
     doc.close()
-    output = io.BytesIO(pdf_bytes)
-    return output
+
+    return io.BytesIO(pdf_bytes)
