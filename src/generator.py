@@ -31,10 +31,10 @@ def generate_unsigned_alnatour_contract(fields, language='A'):
             page.insert_font(fontname=font_name, fontbuffer=font_buffer)
 
     # Coordinates
+    fields = reverse_words_in_fields(fields,['client_name', 'alnatour_fees_words', 'client_name_page3'])
     if language == "A":
-        fields = reverse_words_in_fields(fields,['client_name', 'alnatour_fees_words', 'client_name_page3'])
         field_definitions = {
-            "day": {"page": 0, "x": 445, "y": 212},
+            "day": {"page": 0, "x": 436, "y": 212},
             "date": {"page": 0, "x": 345, "y": 212},
             "id_number": {"page": 0, "x": 120, "y": 327},
             "mobile_number": {"page": 0, "x": 389, "y": 357},
@@ -117,4 +117,4 @@ def generate_unsigned_alnatour_contract(fields, language='A'):
     pdf_bytes = doc.write()
     doc.close()
 
-    return io.BytesIO(pdf_bytes)
+    return io.BytesIO(pdf_bytes),fields["client_name"]
