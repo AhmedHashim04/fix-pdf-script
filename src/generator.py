@@ -33,6 +33,9 @@ def generate_unsigned_alnatour_contract(fields, language='A'):
     # Coordinates
     fields = reverse_words_in_fields(fields,['client_name', 'alnatour_fees_words', 'client_name_page3'])
     if language == "A":
+
+    fields = reverse_words_in_fields(fields,['client_name', 'alnatour_fees_words', 'client_name_page3'])
+    if language == "A":
         field_definitions = {
             "day": {"page": 0, "x": 436, "y": 212},
             "date": {"page": 0, "x": 345, "y": 212},
@@ -45,11 +48,12 @@ def generate_unsigned_alnatour_contract(fields, language='A'):
             "application_id_page_2": {"page": 1, "x": 125, "y": 286},
             
             "application_id_page_3": {"page": 2, "x": 265, "y": 166},
-            "alnatour_fees_page_3": {"page": 2, "x": 394, "y": 230},
+            "creation_date": {"page": 2, "x": 395, "y": 208},
+            "alnatour_fees_page_3": {"page": 2, "x": 448, "y": 229},
+            "alnatour_fees_words": {"page": 2, "x": 380, "y": 249},
+
             "alnatour_fees_page_3_2": {"page": 2, "x": 176, "y": 311},
-            "creation_date": {"page": 2, "x": 390, "y": 204},
-            "alnatour_fees_words": {"page": 2, "x": 375, "y": 247},
-            "alnatour_fees_words_2": {"page": 2, "x": 375, "y": 333},
+            # "alnatour_fees_words_2": {"page": 2, "x": 375, "y": 333},
             "due_date": {"page": 2, "x": 415, "y": 355},
             "client_name_page3": {"page": 2, "x": 380, "y": 480},
             "client_national_id_page3": {"page": 2, "x": 400, "y": 500},
@@ -66,18 +70,19 @@ def generate_unsigned_alnatour_contract(fields, language='A'):
             "alnatour_fees_page_1": {"page": 0, "x": 291, "y": 604},
             
             "application_id_page_2": {"page": 1, "x": 278, "y": 95},
-            "application_id_page_3": {"page": 2, "x": 148, "y": 158},
-            "alnatour_fees_page_3": {"page": 2, "x": 130, "y": 191},
+
+            "application_id_page_3": {"page": 2, "x": 146, "y": 159},
+            "creation_date": {"page": 2, "x": 155, "y": 176},
+            "alnatour_fees_page_3": {"page": 2, "x": 126, "y": 192},
+            "alnatour_fees_words": {"page": 2, "x": 162, "y": 209},
+            
             "alnatour_fees_page_3_2": {"page": 2, "x": 402, "y": 276},
-            "creation_date": {"page": 2, "x": 159, "y": 175},
-            "alnatour_fees_words": {"page": 2, "x": 162, "y": 208},
             # "alnatour_fees_words_2": {"page": 2, "x": 452, "y": 276},
             "due_date": {"page": 2, "x": 319, "y": 293},
             "client_name_page3": {"page": 2, "x": 140, "y": 410},
             "client_national_id_page3": {"page": 2, "x": 160, "y": 435},
             "client_location_page3": {"page": 2, "x": 112, "y": 458},
         }
-
     font_size = 15 if language == "A" else 12
 
     # ------------- FIXED AREA (LOOP) -------------
