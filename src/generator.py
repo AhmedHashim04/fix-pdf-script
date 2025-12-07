@@ -38,7 +38,7 @@ def generate_unsigned_alnatour_contract(fields, language='A'):
             "date": {"page": 0, "x": 345, "y": 212},
             "id_number": {"page": 0, "x": 120, "y": 327},
             "mobile_number": {"page": 0, "x": 389, "y": 357},
-            "client_name": {"page": 0, "x": 410, "y": 329},
+            "client_name": {"page": 0, "x": 350, "y": 329},
             "address": {"page": 0, "x": 250, "y": 357},
             
             "alnatour_fees_page_1": {"page": 1, "x": 133, "y": 241},
@@ -53,7 +53,7 @@ def generate_unsigned_alnatour_contract(fields, language='A'):
             "due_date": {"page": 2, "x": 415, "y": 355},
             "client_name_page3": {"page": 2, "x": 380, "y": 480},
             "client_national_id_page3": {"page": 2, "x": 400, "y": 500},
-            "client_location_page3": {"page": 2, "x": 330, "y": 520},
+            "client_location_page3": {"page": 2, "x": 430, "y": 520},
         }
     else:
         field_definitions = {

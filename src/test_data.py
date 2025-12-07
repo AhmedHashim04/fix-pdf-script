@@ -18,7 +18,7 @@ arabic_fields = {
     "address": "الرياض",
     "client_name_page3": "العتيبي خالد بن أحمد",
     "client_national_id_page3": "1023456789",
-    "client_location_page3": "السعودية العربية المملكة ،الرياض",
+    "client_location_page3": "الرياض",
 }
 
 english_fields = {
@@ -39,5 +39,5 @@ english_fields = {
     "due_date": "2025/02/01",
     "client_name_page3": "Saud Al Otaibi",
     "client_national_id_page3": "2034567890",
-    "client_location_page3": "Riyadh, Kingdom of Saudi Arabia",
+    "client_location_page3": "Riyadh",
 }
