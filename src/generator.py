@@ -31,8 +31,6 @@ def generate_unsigned_alnatour_contract(fields, language='A'):
             page.insert_font(fontname=font_name, fontbuffer=font_buffer)
 
     # Coordinates
-    fields = reverse_words_in_fields(fields,['client_name', 'alnatour_fees_words', 'client_name_page3'])
-    if language == "A":
 
     fields = reverse_words_in_fields(fields,['client_name', 'alnatour_fees_words', 'client_name_page3'])
     if language == "A":
@@ -122,4 +120,30 @@ def generate_unsigned_alnatour_contract(fields, language='A'):
     pdf_bytes = doc.write()
     doc.close()
 
-    return io.BytesIO(pdf_bytes),fields["client_name"]
+    # client_name_Prelim_Contract_date.pdf
+    # return ContentFile(pdf_bytes, name=f'{fields.get("client_name")}_Prelim_Contract_{datetime.now().strftime("%Y%m%d")}.pdf')
+    #pdf_name = f"unsigned_alnatour_contract_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
+
+    # Determine contract type label based on language
+    contract_type = "Prelim_Contract" 
+
+    # Extract client name safely
+    # client_name = fields.get("client_name", "").strip().replace(" ", "_")
+    client_name = random_digits(4)
+
+    # Prepare date (English: 20250101, Arabic: ٢٠٢٥٠١٠١)
+    date_str = datetime.now().strftime("%Y%m%d")
+    # if language == "A":
+    #     # Convert 0-9 → Arabic numerals
+    #     arabic_digits = str.maketrans("0123456789", "٠١٢٣٤٥٦٧٨٩")
+    #     date_str = date_str.translate(arabic_digits)
+
+    # Final PDF name
+    pdf_name = f"{client_name}_{contract_type}_{date_str}.pdf"
+
+    # Attach name to output file
+    output = io.BytesIO(pdf_bytes)
+    output.seek(0)
+    output.name = pdf_name
+    return output
+

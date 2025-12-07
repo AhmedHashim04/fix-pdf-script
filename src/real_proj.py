@@ -10,6 +10,25 @@ from arabic_reshaper import reshape
 from bidi.algorithm import get_display
 from datetime import datetime 
 from utils.generic import random_digits
+import re
+
+
+arabic_pattern = re.compile(r'[\u0600-\u06FF]')
+
+def is_arabic(text):
+    return bool(arabic_pattern.search(text))
+
+def reverse_words_in_fields(fields, keys_to_reverse):
+
+    new_fields = fields.copy()
+    for key in keys_to_reverse:
+        if key in new_fields and isinstance(new_fields[key], str):
+            value = new_fields[key]
+            if is_arabic(value):
+                words = value.split()   
+                words.reverse()         
+                new_fields[key] = " ".join(words)
+    return new_fields
 
 def generate_unsigned_alnatour_contract(fields, language='A'):
     # Construct absolute input PDF path
@@ -23,59 +42,55 @@ def generate_unsigned_alnatour_contract(fields, language='A'):
     doc = fitz.open(str(input_pdf_path.resolve()))
     
     # Load Arabic font
-    arabic_font_path = settings.BASE_DIR / 'applications' / 'contracts' / 'font' / 'alfont_com_arial-1.ttf'
+    arabic_font_path = settings.BASE_DIR / 'applications' / 'contracts' / 'font' / 'font.otf'# don,t forget to put font file
 
     # Ensure the PDF has pages
     if doc.page_count == 0:
         raise ValueError("The input PDF has no pages or failed to open correctly.")
-
+    
+    fields = reverse_words_in_fields(fields,['client_name', 'alnatour_fees_words', 'client_name_page3'])
     # Define fields with their coordinates AND page numbers
-    if language == 'A':
+    if language == "A":
         field_definitions = {
-            "day": {"page": 0, "x": 445, "y": 212},
+            "day": {"page": 0, "x": 436, "y": 212},
             "date": {"page": 0, "x": 345, "y": 212},
-            "id_number": {"page": 0, "x": 144, "y": 327},
+            "id_number": {"page": 0, "x": 120, "y": 327},
             "mobile_number": {"page": 0, "x": 389, "y": 357},
-            "client_name": {"page": 0, "x": 410, "y": 329},  #  NEW FIELD ADDED
-            "alnatour_fees_page_1": {"page": 1, "x": 129, "y": 241},
-            "application_id_page_2": {"page": 1, "x": 133, "y": 286},
-            "application_id_page_3": {"page": 2, "x": 275, "y": 166},
-            "alnatour_fees_page_3": {"page": 2, "x": 394, "y": 230},
-            "alnatour_fees_words": {"page": 2, "x": 381, "y": 246},
-            "creation_date": {"page": 2, "x": 390, "y": 204},
+            "client_name": {"page": 0, "x": 350, "y": 329},
+            "address": {"page": 0, "x": 250, "y": 357},
+            "alnatour_fees_page_1": {"page": 1, "x": 133, "y": 241},
+            "application_id_page_2": {"page": 1, "x": 125, "y": 286},
+            "application_id_page_3": {"page": 2, "x": 265, "y": 166},
+            "creation_date": {"page": 2, "x": 395, "y": 208},
+            "alnatour_fees_page_3": {"page": 2, "x": 448, "y": 229},
+            "alnatour_fees_words": {"page": 2, "x": 380, "y": 249},
             "alnatour_fees_page_3_2": {"page": 2, "x": 176, "y": 311},
-            "client_name_page3": {"page": 2, "x": 428, "y": 480},  #  UPDATED
-            "client_national_id_page3": {"page": 2, "x": 400, "y": 500},  #  UPDATED
-            "client_location_page3": {"page": 2, "x": 400, "y": 550},
-
             "due_date": {"page": 2, "x": 415, "y": 355},
+            "client_name_page3": {"page": 2, "x": 380, "y": 480},
+            "client_national_id_page3": {"page": 2, "x": 400, "y": 500},
+            "client_location_page3": {"page": 2, "x": 430, "y": 520},
         }
     else:
         field_definitions = {
-            "day": {"page": 0, "x": 149, "y": 207},
-            "date": {"page": 0, "x": 256, "y": 207},
-            "id_number": {"page": 0, "x": 248, "y": 321},
-            "mobile_number": {"page": 0, "x": 360, "y": 321},
-            
-            "client_name": {"page": 0, "x": 131, "y": 319},
-
-            "alnatour_fees_page_1": {"page": 0, "x": 291, "y": 605},
-            "address": {"page": 0, "x": 455, "y": 321},
-            "application_id_page_3": {"page": 2, "x": 148, "y": 158},
-            "alnatour_fees_page_3": {"page": 2, "x": 130, "y": 191},
-            "alnatour_fees_words": {"page": 2, "x": 162, "y": 208},
-            "creation_date": {"page": 2, "x": 159, "y": 175},
-            "due_date": {"page": 2, "x": 319, "y": 291},
+            "day": {"page": 0, "x": 149, "y": 205},
+            "date": {"page": 0, "x": 256, "y": 205},
+            "client_name": {"page": 0, "x": 115, "y": 322.5},
+            "id_number": {"page": 0, "x": 248, "y": 323},
+            "mobile_number": {"page": 0, "x": 360, "y": 323},
+            "address": {"page": 0, "x": 455, "y": 322},
+            "alnatour_fees_page_1": {"page": 0, "x": 291, "y": 604},
+            "application_id_page_2": {"page": 1, "x": 278, "y": 95},
+            "application_id_page_3": {"page": 2, "x": 146, "y": 159},
+            "creation_date": {"page": 2, "x": 155, "y": 176},
+            "alnatour_fees_page_3": {"page": 2, "x": 126, "y": 192},
+            "alnatour_fees_words": {"page": 2, "x": 162, "y": 209},
             "alnatour_fees_page_3_2": {"page": 2, "x": 402, "y": 276},
-             # English assumed page 3 fields
-
-            "client_name_page3": {"page": 2, "x": 167, "y": 410},
+            "due_date": {"page": 2, "x": 319, "y": 293},
+            "client_name_page3": {"page": 2, "x": 140, "y": 410},
             "client_national_id_page3": {"page": 2, "x": 160, "y": 435},
             "client_location_page3": {"page": 2, "x": 112, "y": 458},
         }
-
-    # Font settings
-    font_size = 9 if language == 'A' else 8
+    font_size = 15 if language == "A" else 12
     font_color = (0, 0, 0)  # Black color (RGB)
 
     # Try to load the Arabic font if it exists
